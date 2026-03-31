@@ -1,0 +1,77 @@
+from random import randint
+
+wins = 0
+losses = 0
+
+print("H A N G M A N")
+
+while True:
+    command = input('Type "play" to play the game, "results" to show the scoreboard, and "exit" to quit: ')
+    if command == "play":
+        word = []
+        wordToGuessAsAList = []
+        lettersGuessed = []
+
+        attempts = 8
+
+        wordList = ["python", "java", "swift", "javascript"]
+        wordToGuess = wordList[randint(0, len(wordList) - 1)]
+
+        for letter in wordToGuess:
+            word.append("-")
+            wordToGuessAsAList.append(letter)
+
+        while attempts > 0:
+            print()
+            correctLetters = 0
+            printWord = ""
+            for position in range(len(word)):
+                printWord += word[position]
+
+            print(printWord)
+
+            letterGuess = input("Input a letter:")
+
+            if (len(letterGuess) > 1) or (len(letterGuess) == 0):
+                print("Please, input a single letter.")
+                continue
+
+            if letterGuess == letterGuess.upper():
+                print("Please, enter a lowercase letter from the English alphabet.")
+                continue
+
+            if letterGuess in lettersGuessed:
+                print("You've already guessed this letter.")
+                continue
+            else:
+                lettersGuessed.append(letterGuess)
+
+            if not (letterGuess in wordToGuess):
+                print("That letter doesn't appear in the word.")
+                attempts -= 1
+
+            for position in range(len(wordToGuessAsAList)):
+                if (wordToGuessAsAList[position] == letterGuess) and (word[position] != letterGuess):
+                    word.insert(position, letterGuess)
+                    word.pop(position + 1)
+
+                if wordToGuessAsAList[position] == word[position]:
+                    correctLetters += 1
+
+            if correctLetters == len(wordToGuessAsAList):
+                break
+
+        print()
+
+        if attempts > 0:
+            print(f"You guessed the word {wordToGuess}!")
+            print("You survived!")
+            wins += 1
+        else:
+            print("You lost!")
+            losses += 1
+    elif command == "exit":
+        break
+    elif command == "results":
+        print(f"You won: {wins} times.")
+        print(f"You lost: {losses} times")
